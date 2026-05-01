@@ -1,4 +1,4 @@
-export default function TaskTable({ tasks }: { tasks: any[] }) {
+export default function TaskTable({ tasks, onUpdateStatus }: { tasks: any[], onUpdateStatus?: (id: string, status: string) => void }) {
   return (
     <section>
       <h3 className="font-serif text-sm text-white mb-6 tracking-[0.2em] uppercase">Operations Matrix</h3>
@@ -12,6 +12,7 @@ export default function TaskTable({ tasks }: { tasks: any[] }) {
               <th className="pb-4 font-normal">Command</th>
               <th className="pb-4 font-normal">Completion</th>
               <th className="pb-4 font-normal">Next Action</th>
+              <th className="pb-4 font-normal text-right pr-4">Control</th>
             </tr>
           </thead>
           <tbody className="text-xs">
@@ -19,7 +20,7 @@ export default function TaskTable({ tasks }: { tasks: any[] }) {
               const isBottleneck = task['Bottleneck'] === 'Có';
               const isPending = task['Trạng thái (Thực thi)'] === 'Chờ duyệt';
               
-              let rowClass = "border-b border-[#111] hover:bg-[#151515] transition-colors duration-300 ";
+              let rowClass = "group border-b border-[#111] hover:bg-[#151515] transition-colors duration-300 ";
               if (isBottleneck) rowClass += "bg-luxury-redDim hover:bg-[#1A0A0A] border-l-[3px] border-l-luxury-red";
               else if (isPending) rowClass += "bg-luxury-goldDim hover:bg-[#181810] border-l-[3px] border-l-luxury-gold";
               else rowClass += "border-l-[3px] border-l-transparent";
@@ -43,6 +44,11 @@ export default function TaskTable({ tasks }: { tasks: any[] }) {
                     </div>
                   </td>
                   <td className="py-5 text-[11px] text-[#888] font-light truncate max-w-[200px] md:max-w-xs">{task['NEXT ACTION']}</td>
+                  <td className="py-5 text-right pr-4 text-[9px] uppercase tracking-[0.1em] space-x-3 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button onClick={() => onUpdateStatus && onUpdateStatus(task['ID_TASK'], 'Hoàn thành')} className="text-luxury-textMuted hover:text-white transition-colors">Hoàn thành</button>
+                    <button onClick={() => onUpdateStatus && onUpdateStatus(task['ID_TASK'], 'Chờ duyệt')} className="text-luxury-textMuted hover:text-luxury-gold transition-colors">Chờ duyệt</button>
+                    <button onClick={() => onUpdateStatus && onUpdateStatus(task['ID_TASK'], 'Tạm dừng')} className="text-luxury-textMuted hover:text-luxury-red transition-colors">Tạm dừng</button>
+                  </td>
                 </tr>
               );
             })}
